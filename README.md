@@ -4,9 +4,14 @@ This is data analysis project from Udacity. Done some data analysis steps mentio
 
 ## Data Analysis Steps
 
-I. Exploratory Data Analysis
-II. Rank Based Recommendations
-III. User-User Based Collaborative Filtering
-IV. Content Based Recommendations (EXTRA - NOT REQUIRED)
-V. Matrix Factorization
-VI. Extras & Concluding
+1. Exploratory Data Analysis
+
+2. Rank Based Recommendations
+
+3. User-User Based Collaborative Filtering
+
+4. Content Based Recommendations 
+
+5. Matrix Factorization
+
+6. Extras & Concluding
