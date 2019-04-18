@@ -121,17 +121,17 @@ max_views_by_user = 364 # The maximum number of user-article interactions by any
 
 
 # check number of duplicate articles 
-print(df_content.duplicated().sum())
+print(df_content.duplicated().sum())# Find and explore duplicate articles
 
 
-# In[13]:
+# In[12]:
 
 
 # Remove any rows that have the same article_id - only keep the first
 df_content.drop_duplicates(keep = 'first', inplace = True)
 
 
-# In[14]:
+# In[13]:
 
 
 #Verify that the duplicates number has gone down
@@ -145,7 +145,7 @@ print(df_content.duplicated().sum())
 # **c.** The number of unique users in the dataset. (excluding null values) <br>
 # **d.** The number of user-article interactions in the dataset.
 
-# In[15]:
+# In[14]:
 
 
 #a. The number of unique articles that have an interaction with a user.
@@ -153,28 +153,28 @@ df.article_id.unique
 df.groupby('article_id')['email'].nunique()
 
 
-# In[16]:
+# In[15]:
 
 
 #b. The number of unique articles in the dataset (whether they have any interactions or not).
 df_content.article_id.nunique()
 
 
-# In[17]:
+# In[16]:
 
 
 #c. The number of unique users in the dataset. (excluding null values)
 df.email.nunique()
 
 
-# In[18]:
+# In[17]:
 
 
 #d. The number of user-article interactions in the dataset.
 len(df)
 
 
-# In[19]:
+# In[18]:
 
 
 unique_articles = 714 # The number of unique articles that have at least one interaction
@@ -185,20 +185,20 @@ user_article_interactions = 45993 # The number of user-article interactions
 
 # `4.` Use the cells below to find the most viewed **article_id**, as well as how often it was viewed.  After talking to the company leaders, the `email_mapper` function was deemed a reasonable way to map users to ids.  There were a small number of null values, and it was found that all of these null values likely belonged to a single user (which is how they are stored using the function below).
 
-# In[20]:
+# In[19]:
 
 
 df.article_id.value_counts().head()
 
 
-# In[21]:
+# In[20]:
 
 
 most_viewed_article_id = "1429.0" # The most viewed article in the dataset as a string with one value following the decimal 
 max_views = 937 # The most viewed article in the dataset was viewed how many times?
 
 
-# In[22]:
+# In[21]:
 
 
 ## No need to change the code here - this will be helpful for later parts of the notebook
@@ -225,7 +225,7 @@ df['user_id'] = email_encoded
 df.head()
 
 
-# In[23]:
+# In[22]:
 
 
 ## If you stored all your results in the variable names above, 
@@ -252,7 +252,7 @@ t.sol_1_test(sol_1_dict)
 # 
 # `1.` Fill in the function below to return the **n** top articles ordered with most interactions as the top. Test your function using the tests below.
 
-# In[24]:
+# In[23]:
 
 
 def get_top_articles(n, df=df):
@@ -288,14 +288,14 @@ def get_top_article_ids(n, df=df):
     return top_articles_ids # Return the top article ids
 
 
-# In[25]:
+# In[24]:
 
 
 print(get_top_articles(10))
 print(get_top_article_ids(10))
 
 
-# In[26]:
+# In[25]:
 
 
 # Test your function by returning the top 5, 10, and 20 articles
@@ -325,7 +325,7 @@ t.sol_2_test(get_top_articles)
 # 
 # Use the tests to make sure the basic structure of your matrix matches what is expected by the solution.
 
-# In[27]:
+# In[26]:
 
 
 # create the user-article matrix with 1's and 0's
@@ -355,7 +355,7 @@ def create_user_item_matrix(df):
 user_item = create_user_item_matrix(df)
 
 
-# In[28]:
+# In[27]:
 
 
 ## Tests: You should just need to run this cell.  Don't change the code.
@@ -369,7 +369,7 @@ print("You have passed our quick tests!  Please proceed!")
 # 
 # Use the tests to test your function.
 
-# In[29]:
+# In[28]:
 
 
 def find_similar_users(user_id, user_item=user_item):
@@ -398,7 +398,7 @@ def find_similar_users(user_id, user_item=user_item):
     return most_similar_users # return a list of the users in order from most to least similar
 
 
-# In[30]:
+# In[29]:
 
 
 # Do a spot check of your function
@@ -409,7 +409,7 @@ print("The 3 most similar users to user 46 are: {}".format(find_similar_users(46
 
 # `3.` Now that you have a function that provides the most similar users to each user, you will want to use these users to find articles you can recommend.  Complete the functions below to return the articles you would recommend to each user. 
 
-# In[31]:
+# In[30]:
 
 
 def get_article_names(article_ids, df=df):
@@ -443,7 +443,7 @@ def get_user_articles(user_id, user_item=user_item):
     Provides a list of the article_ids and article titles that have been seen by a user
     '''
     # Your code here
-    article_ids = user_item.loc[user_id][user_item.loc[user_id] == 1].index.tolist()
+    article_ids = user_item.loc[user_id][user_item.loc[user_id] == 1].index.astype(str).tolist()
     article_names = get_article_names(article_ids)
     return article_ids, article_names # return the ids and names
 
@@ -481,14 +481,14 @@ def user_user_recs(user_id, m=10):
     return recs # return your recommendations for this user_id
 
 
-# In[32]:
+# In[31]:
 
 
 # Check Results
 get_article_names(user_user_recs(1, 10)) # Return 10 recommendations for user 1
 
 
-# In[33]:
+# In[32]:
 
 
 # Test your functions here - No need to change this code - just run this cell
@@ -508,7 +508,31 @@ print("If this is all you see, you passed all of our tests!  Nice job!")
 # 
 # * Instead of arbitrarily choosing articles from the user where the number of recommended articles starts below m and ends exceeding m, choose articles with the articles with the most total interactions before choosing those with fewer total interactions. This ranking should be  what would be obtained from the **top_articles** function you wrote earlier.
 
-# In[38]:
+# In[33]:
+
+
+df_article_views = df.groupby('user_id').count()
+
+
+# In[34]:
+
+
+similarity = []
+for user in range(1, user_item.shape[0]+1):
+    sim = np.dot(user_item.loc[20], user_item.loc[user])
+    similarity.append((user, sim))
+
+# sort by similarity
+similarity.sort(key=lambda x: x[1], reverse=True)
+
+# create dataframe
+df_sims = pd.DataFrame()
+df_sims['user_id'] = [x[0] for x in similarity]
+df_sims['similarity'] = [x[1] for x in similarity]
+df_sims = df_sims.set_index('user_id')
+
+
+# In[35]:
 
 
 def get_top_sorted_users(user_id, df=df, user_item=user_item):
@@ -531,21 +555,33 @@ def get_top_sorted_users(user_id, df=df, user_item=user_item):
      
     '''
     # Your code here
-    colName = ['neighbor_id', 'similarity', 'num_interactions']
-    neighbors_df = pd.DataFrame(columns = colName)
+    df_article_views = df.groupby('user_id').count()
     
-    for i in user_item.index.values:
-        if i == user_id:
-            continue
-        neighbor_id = i
-        similarity = user_item[user_item.index == user_id].dot(user_item.loc[i].T).values[0]
-        num_interactions = user_item.loc[i].values.sum()
-        neighbors_df.loc[neighbor_id] = [neighbor_id, similarity, num_interactions]
-        
-    neighbors_df['similarity'] = neighbors_df['similarity'].astype('int')
-    neighbors_df['neighbor_id'] = neighbors_df['neighbor_id'].astype('int')
-    neighbors_df = neighbors_df.sort_values(by = ['similarity', 'neighbor_id'], ascending = [False, True])
-    return neighbors_df # Return the dataframe specified in the doc_string
+    similarity = []
+    for user in range(1, user_item.shape[0]+1):
+        sim = np.dot(user_item.loc[user_id], user_item.loc[user])
+        similarity.append((user, sim))
+    
+    # sort by similarity
+    similarity.sort(key=lambda x: x[1], reverse=True)
+    
+    # create dataframe
+    df_sims = pd.DataFrame()
+    df_sims['user_id'] = [x[0] for x in similarity]
+    df_sims['similarity'] = [x[1] for x in similarity]
+    df_sims = df_sims.set_index('user_id')
+    
+    # dataframe with users sorted by closest followed by most articles viewed
+    #neighbors_dataframe = [df_sims, df_article_views]
+    neighbors_df = pd.merge(df_sims, df_article_views, how='right', on='user_id', left_on=None, right_on=None,
+         left_index=False, right_index=False, sort=True,
+         suffixes=('_x', '_y'), copy=True, indicator=False)
+    #neighbors_df = neighbors_df[['similarity', 'article_id']]
+    #neighbors_df = neighbors_df.reset_index()
+    neighbors_df.columns = [['neighbor_id', 'similarity', 'num_articles']]
+    #neighbors_df = neighbors_df.sort_values(by=['similarity', 'num_articles'], ascending=False)
+
+    return neighbors_df
 
 
 def user_user_recs_part2(user_id, m=10):
@@ -592,7 +628,7 @@ def user_user_recs_part2(user_id, m=10):
     return recs, rec_names
 
 
-# In[39]:
+# In[36]:
 
 
 # Quick spot check - don't change this code - just use it to test your functions
@@ -606,19 +642,19 @@ print(rec_names)
 
 # `5.` Use your functions from above to correctly fill in the solutions to the dictionary below.  Then test your dictionary against the solution.  Provide the code you need to answer each following the comments below.
 
-# In[40]:
+# In[37]:
 
 
 get_top_sorted_users(1).head(5)
 
 
-# In[41]:
+# In[38]:
 
 
 get_top_sorted_users(131).head(10)
 
 
-# In[42]:
+# In[39]:
 
 
 ### Tests with a dictionary of results
@@ -627,7 +663,7 @@ user1_most_sim = 3933 # Find the user that is most similar to user 1
 user131_10th_sim = 242 # Find the 10th most similar user to user 131
 
 
-# In[43]:
+# In[40]:
 
 
 ## Dictionary Test Here
@@ -640,15 +676,14 @@ t.sol_5_test(sol_5_dict)
 
 
 # `6.` If we were given a new user, which of the above functions would you be able to use to make recommendations?  Explain.  Can you think of a better way we might make recommendations?  Use the cell below to explain a better method for new users.
-# 
-# Answer:
-# If given a new user, I would have it that it woud just recommend the first N amount of articles that have the most interaction with it.
+
+# **Answer:** If given a new user, I would have it that it woud just recommend the first N amount of articles that have the most interaction with it.
 
 # **Provide your response here.**
 
 # `7.` Using your existing functions, provide the top 10 recommended articles you would provide for the a new user below.  You can test your function against our thoughts to make sure we are all on the same page with how we might make a recommendation.
 
-# In[44]:
+# In[41]:
 
 
 new_user = '0.0'
@@ -660,10 +695,10 @@ new_user_recs = get_top_article_ids(10)
 new_user_recs
 
 
-# In[46]:
+# In[42]:
 
 
-assert set(new_user_recs) == set(['1314.0','1429.0','1293.0','1427.0','1162.0','1364.0','1304.0','1170.0','1431.0','1330.0']), "Oops!  It makes sense that in this case we would want to recommend the most popular articles, because we don't know anything about these users."
+assert set(new_user_recs) == set([1314.0,1429.0,1293.0,1427.0,1162.0,1364.0,1304.0,1170.0,1431.0,1330.0]), "Oops!  It makes sense that in this case we would want to recommend the most popular articles, because we don't know anything about these users."
 
 print("That's right!  Nice job!")
 
@@ -676,7 +711,7 @@ print("That's right!  Nice job!")
 # 
 # ### This part is NOT REQUIRED to pass this project.  However, you may choose to take this on as an extra way to show off your skills.
 
-# In[47]:
+# In[43]:
 
 
 def make_content_recs():
@@ -698,7 +733,7 @@ def make_content_recs():
 # 
 # ### This part is NOT REQUIRED to pass this project.  However, you may choose to take this on as an extra way to show off your skills.
 
-# In[48]:
+# In[44]:
 
 
 # make recommendations for a brand new user
@@ -713,14 +748,14 @@ def make_content_recs():
 # 
 # `1.` You should have already created a **user_item** matrix above in **question 1** of **Part III** above.  This first question here will just require that you run the cells to get things set up for the rest of **Part V** of the notebook. 
 
-# In[49]:
+# In[45]:
 
 
 # Load the matrix here
 user_item_matrix = pd.read_pickle('user_item_matrix.p')
 
 
-# In[50]:
+# In[46]:
 
 
 # quick look at the matrix
@@ -729,7 +764,7 @@ user_item_matrix.head()
 
 # `2.` In this situation, you can use Singular Value Decomposition from [numpy](https://docs.scipy.org/doc/numpy-1.14.0/reference/generated/numpy.linalg.svd.html) on the user-item matrix.  Use the cell to perform SVD, and explain why this is different than in the lesson.
 
-# In[51]:
+# In[47]:
 
 
 # Perform SVD on the User-Item Matrix Here
@@ -737,29 +772,29 @@ user_item_matrix.head()
 u, s, vt = np.linalg.svd(user_item_matrix) # use the built in to get the three matrices
 
 
-# In[52]:
+# In[48]:
 
 
 s.shape
 
 
-# In[53]:
+# In[49]:
 
 
 u.shape
 
 
-# In[54]:
+# In[50]:
 
 
 vt.shape
 
 
-# In the lectures, we saw that we only chose a small amount (4) for the amount of latent features. However, we are using all of the article IDs for the latent features, which is 714
+# **Answer** SVD can be used in this situation, because user-item matrix have no missing value (None or NaN). It is set zero insted of missing value, so SVD can decompsit user-item matrix to the three matrices. If it is not set zero, funkSVD must be used.
 
 # `3.` Now for the tricky part, how do we choose the number of latent features to use?  Running the below cell, you can see that as the number of latent features increases, we obtain a lower error rate on making predictions for the 1 and 0 values in the user-item matrix.  Run the cell below to get an idea of how the accuracy improves as we increase the number of latent features.
 
-# In[55]:
+# In[51]:
 
 
 num_latent_feats = np.arange(10,700+10,20)
@@ -795,7 +830,7 @@ plt.title('Accuracy vs. Number of Latent Features');
 # * How many articles can we make predictions for in the test set?  
 # * How many articles are we not able to make predictions for because of the cold start problem?
 
-# In[60]:
+# In[52]:
 
 
 df_train = df.head(40000)
@@ -844,7 +879,7 @@ def create_test_and_train_user_item(df_train, df_test):
 user_item_train, user_item_test, test_idx, test_arts = create_test_and_train_user_item(df_train, df_test)
 
 
-# In[61]:
+# In[53]:
 
 
 print(len(test_idx) - user_item_test.shape[0])
@@ -853,7 +888,7 @@ print(user_item_test.shape[0])
 print(len(test_arts) - user_item_test.shape[1])
 
 
-# In[64]:
+# In[54]:
 
 
 # Replace the values in the dictionary below
@@ -877,20 +912,20 @@ t.sol_4_test(sol_4_dict)
 # 
 # Use the cells below to explore how well SVD works towards making predictions for recommendations on the test data.  
 
-# In[65]:
+# In[55]:
 
 
 user_item_train.head()
 
 
-# In[66]:
+# In[56]:
 
 
 # fit SVD on the user_item_train matrix
 u_train, s_train, vt_train = np.linalg.svd(np.array(user_item_train, dtype='int'), full_matrices=False) # fit svd similar to above then use the cells below
 
 
-# In[67]:
+# In[57]:
 
 
 row_idxs = user_item_train.index.isin(test_idx)
@@ -899,7 +934,7 @@ u_test = u_train[row_idxs, :]
 vt_test = vt_train[:, col_idxs]
 
 
-# In[68]:
+# In[58]:
 
 
 # Use these cells to see how well you can use the training 
@@ -943,8 +978,7 @@ plt.legend();
 
 # `6.` Use the cell below to comment on the results you found in the previous question. Given the circumstances of your results, discuss what you might do to determine if the recommendations you make with any of the above recommendation systems are an improvement to how users currently find articles? 
 
-# **Answer:**
-# When we take a look at the training data, the accuracy increases to near 100% as the number of latent features increases. However, when looking at the testing data, it appears that the accuracy is plummiting as the number of Latent Features increases. This could be due to not much variety being in the datasets that could really generalize the data well when performing on the testing set. What we could do, is to shuffle the data more so that we could train on a more diversified set of data.
+# **Answer:**  When we take a look at the training data, the accuracy increases to near 100% as the number of latent features increases. However, when looking at the testing data, it appears that the accuracy is plummiting as the number of Latent Features increases. This could be due to not much variety being in the datasets that could really generalize the data well when performing on the testing set. What we could do, is to shuffle the data more so that we could train on a more diversified set of data.
 
 # <a id='conclusions'></a>
 # ### Extras
@@ -966,7 +1000,7 @@ plt.legend();
 # 
 # > Once you've done this, you can submit your project by clicking on the "Submit Project" button in the lower right here. This will create and submit a zip file with this .ipynb doc and the .html or .pdf version you created. Congratulations! 
 
-# In[69]:
+# In[59]:
 
 
 from subprocess import call
